@@ -1,0 +1,228 @@
+---
+title: "Fake News Database"
+author: "Zhaode Ouyang"
+---
+
+***Setting up the database connection and making the Database Connection name available for entire session ***
+```{r setup}
+library(knitr)
+library(DBI)
+library(RSQLite)
+
+knitr::opts_chunk$set(echo = TRUE)
+
+dbFakeNews = dbConnect(RSQLite::SQLite(), dbname ="Fake_News.db")
+
+knitr::opts_chunk$set(connection = dbFakeNews)
+```
+
+# Checking the structure of current database (i.e., list of all tables & views if any)
+```{r }
+# dbListTables is a function in DBI package
+# for this code chunk you don't  need database connection.
+DBI::dbListTables(dbFakeNews)
+```
+
+
+
+
+# Creating Entities
+```{sql connection=dbFakeNews}
+DROP TABLE IF EXISTS LOCATIONS;
+```
+
+```{sql connection=dbFakeNews}
+CREATE TABLE LOCATIONS (
+  location_id int PRIMARY KEY,
+  country char (50),
+  city_or_area char (50),
+  population int,
+  continent char (50),
+  freedom_score decimal (50),
+  political_rights_score decimal (50), 
+  civil_liberties_score decimal (50)
+);
+```
+
+```{sql connection=dbFakeNews}
+DROP TABLE IF EXISTS AUTHORS;
+```
+
+```{sql connection=dbFakeNews}
+CREATE TABLE AUTHORS (
+  author_id int PRIMARY KEY,
+  location_id int, 
+  author_name char (50),
+  political_bias decimal (50),
+  FOREIGN KEY (location_id) REFERENCES LOCATIONS
+);
+```
+
+```{sql connection=dbFakeNews}
+DROP TABLE IF EXISTS ARTICLES;
+```
+
+```{sql connection=dbFakeNews}
+CREATE TABLE ARTICLES (
+  article_id int PRIMARY KEY,
+  author_id int, 
+  title char (50),
+  full_text char (50000), 
+  subject char (50),
+  published_date date, 
+  url char (50),
+  fake_score decimal, 
+  FOREIGN KEY (author_id) REFERENCES AUTHORS
+);
+```
+#1 is fake, 5 is medium fake, 10 is real
+
+```{sql connection=dbFakeNews}
+DROP TABLE IF EXISTS TARGETS;
+```
+
+```{sql connection=dbFakeNews}
+CREATE TABLE TARGETS (
+  target_id int PRIMARY KEY,
+  age_group char (50),
+  sexural_orientation char(50),
+  location_id int (50), 
+  FOREIGN KEY (location_id) REFERENCES LOCATIONS
+);
+```
+
+```{sql connection=dbFakeNews}
+DROP TABLE IF EXISTS PLATFORMS;
+```
+
+```{sql connection=dbFakeNews}
+CREATE TABLE PLATFORMS (
+  platform_id int PRIMARY KEY,
+  platform_name char (50) NOT NULL
+);
+```
+
+```{sql connection=dbFakeNews}
+DROP TABLE IF EXISTS ARTICLES_PLATFORMS_JOIN;
+```
+
+```{sql connection=dbFakeNews}
+CREATE TABLE ARTICLES_PLATFORMS_JOIN (
+  platform_id int,
+  article_id int,
+  FOREIGN KEY (platform_id) REFERENCES PLATFORMS
+  FOREIGN KEY (article_id) REFERENCES ARTICLES
+);
+```
+
+```{sql connection=dbFakeNews}
+DROP TABLE IF EXISTS ARTICLES_TARGETS_JOIN;
+```
+
+```{sql connection=dbFakeNews}
+CREATE TABLE ARTICLES_TARGETS_JOIN (
+  article_id int,
+  target_id int,
+  FOREIGN KEY (target_id) REFERENCES TARGETS
+  FOREIGN KEY (article_id) REFERENCES ARTICLES
+);
+```
+
+
+
+
+
+# Data insertion command where column names are specified
+```{sql connection=dbFakeNews}
+INSERT INTO LOCATIONS (location_id, country, city_or_area, population, continent, freedom_score, political_rights_score, civil_liberties_score) VALUES 
+(1,"China","Guangzhou","1000000","Asia","3.5","2.2","4.1"),
+(2,"U.S.","Boston","1000000","North America","3.5","2.2","4.1"),
+(3,"Ukraine","Unknown","1000000","Eastern Europe","8.2","1.6","4.1"); 
+```
+
+```{sql connection=dbFakeNews}
+INSERT INTO AUTHORS (author_id, location_id, author_name, political_bias) VALUES 
+(1,1,"Jerry","3.5"),
+(2,3,"Zhaode","2.5"); 
+```
+
+```{sql connection=dbFakeNews}
+INSERT INTO ARTICLES (article_id, author_id, title, full_text, subject, published_date, url, fake_score) VALUES 
+(1,1,"SampleTitle1","111full_textfull_textfull_textfull_text","News","1000-01-01","www.xx.com","1.5"),
+(2,1,"SampleTitle2","2222full_textfull_textfull_textfull_text","News","2222-01-01","www.aaabc.com","2.5"),
+(3,2,"Ukraine SampleTitle3","333full_textfull_textfull_textfull_text","News","8855-01-01","www.xx.com","4.5"),
+(4,2,"SampleTitle4","444full_textfull_textfull_textfull_text","News","4568-01-01","www.aaabc.com","4.5"),
+(5,2,"SampleTitle4 Ukraine SampleTitle4","55full_textfull_textfull_textfull_text","News","568-01-01","www.bbc.com","7.5"); 
+```
+
+```{sql connection=dbFakeNews}
+INSERT INTO TARGETS (target_id, age_group, sexural_orientation, location_id) VALUES 
+(1,"20","Straight","2"),
+(2,"20","Bisexual","3"),
+(3,"20","Straight","1"),
+(4,"20","Straight","3"); 
+```
+
+```{sql connection=dbFakeNews}
+INSERT INTO PLATFORMS (platform_id, platform_name) VALUES 
+(1,"CNN"),
+(2,"Fox"),
+(3,"WSJ"),
+(4,"ABC"); 
+```
+
+
+```{sql connection=dbFakeNews}
+INSERT INTO ARTICLES_PLATFORMS_JOIN (article_id, platform_id) VALUES 
+(1,1),
+(1,2),
+(1,3),
+(2,4),
+(2,4); 
+```
+
+```{sql connection=dbFakeNews}
+INSERT INTO ARTICLES_TARGETS_JOIN (article_id, target_id) VALUES 
+(3,1),
+(5,4),
+(2,3),
+(4,2),
+(3,2); 
+```
+
+
+
+
+
+
+
+# SQL queries
+
+# Compare each author's average fake score to their political bias
+```{sql connection=dbFakeNews, max.print=-1}
+ SELECT author_name,avg(fake_score) AS average_fake_score,political_bias
+ FROM ARTICLES JOIN AUTHORS ON ARTICLES.author_id=AUTHORS.author_id
+ GROUP BY author_name;
+```
+
+
+# Count how many time the articles published
+```{sql connection=dbFakeNews, max.print=-1}
+ SELECT title, COUNT(ARTICLES_PLATFORMS_JOIN.platform_id) AS numbers_of_times_published
+ FROM ARTICLES JOIN ARTICLES_PLATFORMS_JOIN ON ARTICLES.article_id = ARTICLES_PLATFORMS_JOIN.article_id JOIN PLATFORMS ON ARTICLES_PLATFORMS_JOIN.platform_id = PLATFORMS.platform_id
+ GROUP BY title
+```
+
+
+
+
+# Count the target's location of articles where it's title contain "Ukraine"
+```{sql connection=dbFakeNews, max.print=-1}
+ SELECT country, COUNT(country) AS Count
+ FROM ARTICLES_TARGETS_JOIN JOIN TARGETS ON ARTICLES_TARGETS_JOIN.target_id = TARGETS.target_id JOIN LOCATIONS ON LOCATIONS.location_id = TARGETS.location_id
+ WHERE article_id IN (SELECT article_id FROM ARTICLES WHERE title LIKE "%Ukraine%")
+ GROUP BY country
+```
+
+
+
