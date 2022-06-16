@@ -211,7 +211,7 @@ id,Bayesian_label
 21009,0
 21010,0
 21011,1
-21012,1
+21012,0
 21013,0
 21014,1
 21015,1
@@ -801,7 +801,7 @@ id,Bayesian_label
 21599,0
 21600,0
 21601,0
-21602,1
+21602,0
 21603,1
 21604,0
 21605,0
@@ -837,7 +837,7 @@ id,Bayesian_label
 21635,0
 21636,0
 21637,1
-21638,1
+21638,0
 21639,1
 21640,1
 21641,1
@@ -1403,7 +1403,7 @@ id,Bayesian_label
 22201,0
 22202,0
 22203,1
-22204,1
+22204,0
 22205,0
 22206,1
 22207,0
@@ -2107,8 +2107,13 @@ id,Bayesian_label
 22905,0
 22906,0
 22907,1
+<<<<<<< Updated upstream:Machine Leaning/ML_Bayesian_v1.csv
 22908,1
 22909,1
+=======
+22908,0
+22909,0
+>>>>>>> Stashed changes:Machine Leaning/ML_Bayesian__pipeline.csv
 22910,1
 22911,0
 22912,1
@@ -2256,8 +2261,13 @@ id,Bayesian_label
 23054,1
 23055,0
 <<<<<<< Updated upstream:Machine Leaning/ML_Bayesian_v1.csv
+<<<<<<< Updated upstream:Machine Leaning/ML_Bayesian_v1.csv
 23056,0
 23057,1
+=======
+23056,1
+23057,0
+>>>>>>> Stashed changes:Machine Leaning/ML_Bayesian__pipeline.csv
 =======
 23056,1
 23057,0
@@ -2534,7 +2544,7 @@ id,Bayesian_label
 23327,1
 23328,1
 23329,1
-23330,1
+23330,0
 23331,1
 23332,1
 23333,0
@@ -3231,7 +3241,7 @@ id,Bayesian_label
 24024,0
 24025,1
 24026,0
-24027,0
+24027,1
 24028,1
 24029,0
 24030,0
@@ -3283,7 +3293,7 @@ id,Bayesian_label
 24076,0
 24077,1
 24078,0
-24079,0
+24079,1
 24080,1
 24081,0
 24082,1
@@ -3483,7 +3493,7 @@ id,Bayesian_label
 24276,0
 24277,0
 24278,1
-24279,0
+24279,1
 24280,0
 24281,1
 24282,0
@@ -4104,7 +4114,7 @@ id,Bayesian_label
 24897,1
 24898,0
 24899,0
-24900,1
+24900,0
 24901,0
 24902,1
 24903,1
@@ -4309,7 +4319,11 @@ id,Bayesian_label
 25102,1
 25103,0
 <<<<<<< Updated upstream:Machine Leaning/ML_Bayesian_v1.csv
+<<<<<<< Updated upstream:Machine Leaning/ML_Bayesian_v1.csv
 25104,1
+=======
+25104,0
+>>>>>>> Stashed changes:Machine Leaning/ML_Bayesian__pipeline.csv
 =======
 25104,0
 >>>>>>> Stashed changes:Machine Leaning/ML_Bayesian__pipeline.csv
@@ -4389,7 +4403,7 @@ id,Bayesian_label
 25178,1
 25179,0
 25180,1
-25181,0
+25181,1
 25182,1
 25183,1
 25184,1
@@ -4773,7 +4787,7 @@ id,Bayesian_label
 25562,1
 25563,0
 25564,0
-25565,0
+25565,1
 25566,1
 25567,0
 25568,1
