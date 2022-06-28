@@ -1,2 +1,2 @@
 # Fake News Detection
-## Including cleaning, batch translation, database design, and machine learning fake news detection
+## Using Sklearn and Tensorflow to compare different algorisms to identify fake news
